@@ -21,10 +21,10 @@ import { JwtStrategy } from './passport/jwt.strategy';
       }),
       inject: [ConfigService],
     }),
-    PassportModule
+    PassportModule,
   ],
 
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}

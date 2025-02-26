@@ -2,15 +2,20 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '@/modules/users/users.service';
 import { comparePasswordHelper } from '@/helpers/util';
 import { JwtService } from '@nestjs/jwt';
-import { ChangePasswordAuthDto, CodeAuthDto, CreateAuthDto } from './dto/create-auth.dto';
+import { ConfigService } from '@nestjs/config';
+import {
+  ChangePasswordAuthDto,
+  CodeAuthDto,
+  CreateAuthDto,
+} from './dto/create-auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
-  ) { }
-
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findByEmail(username);
@@ -23,34 +28,66 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.email, sub: user._id };
+
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'),
+      expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRED'),
+    });
+
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRED'),
+    });
     return {
       user: {
         email: user.email,
         _id: user._id,
-        name: user.name
+        name: user.name,
       },
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
+  }
+
+  async refreshAccessToken(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      });
+
+      const newAccessToken = this.jwtService.sign(
+        { username: payload.username, sub: payload.sub },
+        {
+          secret: this.configService.get<string>('JWT_SECRET'),
+          expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRED'),
+        },
+      );
+
+      return { access_token: newAccessToken };
+    } catch (error) {
+      throw new UnauthorizedException(
+        'Refresh token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.',
+      );
+    }
   }
 
   handleRegister = async (registerDto: CreateAuthDto) => {
     return await this.usersService.handleRegister(registerDto);
-  }
+  };
 
   checkCode = async (data: CodeAuthDto) => {
     return await this.usersService.handleActive(data);
-  }
+  };
 
   retryActive = async (data: string) => {
     return await this.usersService.retryActive(data);
-  }
+  };
 
   retryPassword = async (data: string) => {
     return await this.usersService.retryPassword(data);
-  }
+  };
 
   changePassword = async (data: ChangePasswordAuthDto) => {
     return await this.usersService.changePassword(data);
-  }
-
+  };
 }

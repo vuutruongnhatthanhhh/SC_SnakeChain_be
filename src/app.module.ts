@@ -53,6 +53,7 @@ import { TransformInterceptor } from '@/core/transform.interceptor';
     }),
   ],
   controllers: [AppController],
+  // protect alll routes with JwtAuthGuard
   providers: [
     AppService,
     {

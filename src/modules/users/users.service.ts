@@ -155,7 +155,7 @@ export class UsersService {
 
   async handleActive(data: CodeAuthDto) {
     const user = await this.userModel.findOne({
-      _id: data._id,
+      email: data.email,
       codeId: data.code,
     });
     if (!user) {
@@ -168,7 +168,7 @@ export class UsersService {
     if (isBeforeCheck) {
       //valid => update user
       await this.userModel.updateOne(
-        { _id: data._id },
+        { email: data.email },
         {
           isActive: true,
         },
@@ -233,7 +233,7 @@ export class UsersService {
     this.mailerService.sendMail({
       to: user.email, // list of receivers
       subject: 'Đổi mật khẩu tài khoản Snake Chain', // Subject line
-      template: 'register',
+      template: 'changePass',
       context: {
         name: user?.name ?? user.email,
         activationCode: codeId,

@@ -27,6 +27,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
+  // not protect this route (use public)
   @Public()
   @UseGuards(LocalAuthGuard)
   @ResponseMessage('Fetch login')
@@ -62,5 +63,11 @@ export class AuthController {
   @Public()
   changePassword(@Body() data: ChangePasswordAuthDto) {
     return this.authService.changePassword(data);
+  }
+
+  @Post('refresh-token')
+  @Public()
+  refreshToken(@Body('refresh_token') refreshToken: string) {
+    return this.authService.refreshAccessToken(refreshToken);
   }
 }
