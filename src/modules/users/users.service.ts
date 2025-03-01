@@ -9,12 +9,14 @@ import aqp from 'api-query-params';
 import mongoose from 'mongoose';
 import {
   ChangePasswordAuthDto,
+  ChangePasswordProfileDto,
   CodeAuthDto,
   CreateAuthDto,
 } from '@/auth/dto/create-auth.dto';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 import { MailerService } from '@nestjs-modules/mailer';
+import { comparePasswordHelper } from '@/helpers/util';
 
 @Injectable()
 export class UsersService {
@@ -88,8 +90,10 @@ export class UsersService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.userModel
+      .findById(id, { name: 1, email: 1, phone: 1, address: 1, image: 1 })
+      .exec();
   }
 
   async findByEmail(email: string) {
@@ -147,7 +151,6 @@ export class UsersService {
         activationCode: codeId,
       },
     });
-    //trả ra phản hồi
     return {
       _id: user._id,
     };
@@ -267,5 +270,32 @@ export class UsersService {
     } else {
       throw new BadRequestException('Mã code không hợp lệ hoặc đã hết hạn');
     }
+  }
+
+  async changePasswordProfile(data: ChangePasswordProfileDto) {
+    if (data.confirmPassword !== data.password) {
+      throw new BadRequestException(
+        'Mật khẩu/xác nhận mật khẩu không chính xác.',
+      );
+    }
+
+    const user = await this.userModel.findOne({ email: data.email });
+
+    if (!user) {
+      throw new BadRequestException('Tài khoản không tồn tại');
+    }
+
+    const isMatch = await comparePasswordHelper(
+      data.oldPassword,
+      user.password,
+    );
+    if (!isMatch) {
+      throw new BadRequestException('Mật khẩu hiện tại không đúng.');
+    }
+
+    const newPassword = await hashPasswordHelper(data.password);
+    await user.updateOne({ password: newPassword });
+
+    return true;
   }
 }

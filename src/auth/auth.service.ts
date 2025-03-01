@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import {
   ChangePasswordAuthDto,
+  ChangePasswordProfileDto,
   CodeAuthDto,
   CreateAuthDto,
 } from './dto/create-auth.dto';
@@ -27,7 +28,7 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.email, sub: user._id };
+    const payload = { username: user.email, sub: user._id, role: user.role };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),
@@ -41,8 +42,8 @@ export class AuthService {
     return {
       user: {
         email: user.email,
-        _id: user._id,
-        name: user.name,
+        // _id: user._id,
+        // name: user.name,
       },
       access_token: accessToken,
       refresh_token: refreshToken,
@@ -89,5 +90,9 @@ export class AuthService {
 
   changePassword = async (data: ChangePasswordAuthDto) => {
     return await this.usersService.changePassword(data);
+  };
+
+  changePasswordProfile = async (data: ChangePasswordProfileDto) => {
+    return await this.usersService.changePasswordProfile(data);
   };
 }

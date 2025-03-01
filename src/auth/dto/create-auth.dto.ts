@@ -32,3 +32,17 @@ export class ChangePasswordAuthDto {
   @IsNotEmpty({ message: 'email không được để trống' })
   email: string;
 }
+
+export class ChangePasswordProfileDto {
+  @IsNotEmpty({ message: 'Mật khẩu cũ không được để trống' })
+  oldPassword: string;
+
+  @IsNotEmpty({ message: 'Mật khẩu mới không được để trống' })
+  password: string;
+
+  @IsNotEmpty({ message: 'Vui lòng nhập lại mật khẩu mới' })
+  confirmPassword: string;
+
+  @IsNotEmpty({ message: 'Email không được để trống' })
+  email: string;
+}

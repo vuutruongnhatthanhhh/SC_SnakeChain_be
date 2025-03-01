@@ -14,20 +14,24 @@ import { LocalAuthGuard } from './passport/local-auth.guard';
 import { Public, ResponseMessage } from '@/decorator/customize';
 import {
   ChangePasswordAuthDto,
+  ChangePasswordProfileDto,
   CodeAuthDto,
   CreateAuthDto,
 } from './dto/create-auth.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import { UsersService } from '@/modules/users/users.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly mailerService: MailerService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Post('login')
   // not protect this route (use public)
+  // don't need to check token
   @Public()
   @UseGuards(LocalAuthGuard)
   @ResponseMessage('Fetch login')
@@ -65,9 +69,19 @@ export class AuthController {
     return this.authService.changePassword(data);
   }
 
+  @Post('change-password-profile')
+  changePasswordProfile(@Body() data: ChangePasswordProfileDto) {
+    return this.authService.changePasswordProfile(data);
+  }
+
   @Post('refresh-token')
   @Public()
   refreshToken(@Body('refresh_token') refreshToken: string) {
     return this.authService.refreshAccessToken(refreshToken);
+  }
+
+  @Get(':id')
+  profile(@Param('id') id: string) {
+    return this.usersService.findOne(id);
   }
 }
