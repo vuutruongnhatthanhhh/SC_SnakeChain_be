@@ -20,25 +20,34 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @Roles('SNAKE')
+  @UseGuards(RolesGuard)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @Roles('SNAKE', 'WORM')
+  @UseGuards(RolesGuard)
   async findAll(
-    @Query() query: string,
+    @Query('query') query: string,
     @Query('current') current: string,
     @Query('pageSize') pageSize: string,
   ) {
     return this.usersService.findAll(query, +current, +pageSize);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.usersService.findOne(+id);
-  // }
+  @Get('count')
+  @Roles('SNAKE', 'WORM')
+  @UseGuards(RolesGuard)
+  async countUsers() {
+    const totalUsers = await this.usersService.countUsers();
+    return { totalUsers };
+  }
 
   @Patch()
+  @Roles('SNAKE')
+  @UseGuards(RolesGuard)
   update(@Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto);
   }

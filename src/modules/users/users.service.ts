@@ -59,15 +59,54 @@ export class UsersService {
     };
   }
 
+  // async findAll(query: string, current: number, pageSize: number) {
+  //   const { filter, sort } = aqp(query);
+  //   if (filter.current) delete filter.current;
+  //   if (filter.pageSize) delete filter.pageSize;
+
+  //   if (!current) current = 1;
+  //   if (!pageSize) pageSize = 10;
+
+  //   const totalItems = (await this.userModel.find(filter)).length;
+  //   const totalPages = Math.ceil(totalItems / pageSize);
+
+  //   const skip = (current - 1) * pageSize;
+
+  //   const results = await this.userModel
+  //     .find(filter)
+  //     .limit(pageSize)
+  //     .skip(skip)
+  //     .select('-password')
+  //     .sort(sort as any);
+
+  //   return {
+  //     meta: {
+  //       current: current, //trang hiện tại
+  //       pageSize: pageSize, //số lượng bản ghi đã lấy
+  //       pages: totalPages, //tổng số trang với điều kiện query
+  //       total: totalItems, // tổng số phần tử (số bản ghi)
+  //     },
+  //     results, //kết quả query
+  //   };
+  // }
+
   async findAll(query: string, current: number, pageSize: number) {
-    const { filter, sort } = aqp(query);
+    let filter: Record<string, any> = {};
+
+    if (query && query.trim() !== '') {
+      filter.$or = [
+        { name: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } },
+      ];
+    }
+
     if (filter.current) delete filter.current;
     if (filter.pageSize) delete filter.pageSize;
 
     if (!current) current = 1;
     if (!pageSize) pageSize = 10;
 
-    const totalItems = (await this.userModel.find(filter)).length;
+    const totalItems = await this.userModel.find(filter).countDocuments();
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const skip = (current - 1) * pageSize;
@@ -77,16 +116,16 @@ export class UsersService {
       .limit(pageSize)
       .skip(skip)
       .select('-password')
-      .sort(sort as any);
+      .sort({ createdAt: -1 });
 
     return {
       meta: {
-        current: current, //trang hiện tại
-        pageSize: pageSize, //số lượng bản ghi đã lấy
-        pages: totalPages, //tổng số trang với điều kiện query
-        total: totalItems, // tổng số phần tử (số bản ghi)
+        current: current,
+        pageSize: pageSize,
+        pages: totalPages,
+        total: totalItems,
       },
-      results, //kết quả query
+      results,
     };
   }
 
@@ -297,5 +336,9 @@ export class UsersService {
     await user.updateOne({ password: newPassword });
 
     return true;
+  }
+
+  async countUsers(): Promise<number> {
+    return this.userModel.countDocuments();
   }
 }

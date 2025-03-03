@@ -57,7 +57,7 @@ export class AuthService {
       });
 
       const newAccessToken = this.jwtService.sign(
-        { username: payload.username, sub: payload.sub },
+        { username: payload.username, sub: payload.sub, role: payload.role },
         {
           secret: this.configService.get<string>('JWT_SECRET'),
           expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRED'),
