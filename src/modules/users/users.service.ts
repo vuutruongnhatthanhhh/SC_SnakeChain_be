@@ -59,38 +59,14 @@ export class UsersService {
     };
   }
 
-  // async findAll(query: string, current: number, pageSize: number) {
-  //   const { filter, sort } = aqp(query);
-  //   if (filter.current) delete filter.current;
-  //   if (filter.pageSize) delete filter.pageSize;
-
-  //   if (!current) current = 1;
-  //   if (!pageSize) pageSize = 10;
-
-  //   const totalItems = (await this.userModel.find(filter)).length;
-  //   const totalPages = Math.ceil(totalItems / pageSize);
-
-  //   const skip = (current - 1) * pageSize;
-
-  //   const results = await this.userModel
-  //     .find(filter)
-  //     .limit(pageSize)
-  //     .skip(skip)
-  //     .select('-password')
-  //     .sort(sort as any);
-
-  //   return {
-  //     meta: {
-  //       current: current, //trang hiện tại
-  //       pageSize: pageSize, //số lượng bản ghi đã lấy
-  //       pages: totalPages, //tổng số trang với điều kiện query
-  //       total: totalItems, // tổng số phần tử (số bản ghi)
-  //     },
-  //     results, //kết quả query
-  //   };
-  // }
-
-  async findAll(query: string, current: number, pageSize: number) {
+  async findAll(
+    query: string,
+    current: number,
+    pageSize: number,
+    role: string,
+    accountType: string,
+    isActive: string,
+  ) {
     let filter: Record<string, any> = {};
 
     if (query && query.trim() !== '') {
@@ -98,6 +74,18 @@ export class UsersService {
         { name: { $regex: query, $options: 'i' } },
         { email: { $regex: query, $options: 'i' } },
       ];
+    }
+
+    if (role && ['SNAKE', 'WORM', 'USER'].includes(role)) {
+      filter.role = role;
+    }
+
+    if (accountType && ['LOCAL', 'GOOGLE'].includes(accountType)) {
+      filter.accountType = accountType;
+    }
+
+    if (isActive !== undefined) {
+      filter.isActive = isActive === 'true';
     }
 
     if (filter.current) delete filter.current;

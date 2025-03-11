@@ -33,8 +33,18 @@ export class UsersController {
     @Query('query') query: string,
     @Query('current') current: string,
     @Query('pageSize') pageSize: string,
+    @Query('role') role: string,
+    @Query('accountType') accountType: string,
+    @Query('isActive') isActive: string,
   ) {
-    return this.usersService.findAll(query, +current, +pageSize);
+    return this.usersService.findAll(
+      query,
+      +current,
+      +pageSize,
+      role,
+      accountType,
+      isActive,
+    );
   }
 
   @Get('count')
