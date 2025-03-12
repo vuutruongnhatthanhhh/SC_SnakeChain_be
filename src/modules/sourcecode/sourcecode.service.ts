@@ -204,21 +204,21 @@ export class SourcecodeService {
       updatedUrl = await this.generateUniqueUrl(updatedUrl);
     }
 
-    if (image !== sourcecode.image) {
-      if (sourcecode.image) {
-        this.deleteFile(`/${sourcecode.image}`);
-      }
-    }
+    // if (image !== sourcecode.image) {
+    //   if (sourcecode.image) {
+    //     this.deleteFile(`/${sourcecode.image}`);
+    //   }
+    // }
 
-    if (extendedImage && Array.isArray(extendedImage)) {
-      if (sourcecode.extendedImage) {
-        sourcecode.extendedImage.forEach((imagePath) => {
-          if (!extendedImage.includes(imagePath)) {
-            this.deleteFile(`/${imagePath}`);
-          }
-        });
-      }
-    }
+    // if (extendedImage && Array.isArray(extendedImage)) {
+    //   if (sourcecode.extendedImage) {
+    //     sourcecode.extendedImage.forEach((imagePath) => {
+    //       if (!extendedImage.includes(imagePath)) {
+    //         this.deleteFile(`/${imagePath}`);
+    //       }
+    //     });
+    //   }
+    // }
 
     return await this.sourcecodeModel.updateOne(
       { _id },
@@ -239,15 +239,15 @@ export class SourcecodeService {
       throw new BadRequestException('SourceCode không tồn tại');
     }
 
-    if (sourcecode.image) {
-      this.deleteFile(`/${sourcecode.image}`);
-    }
+    // if (sourcecode.image) {
+    //   this.deleteFile(`/${sourcecode.image}`);
+    // }
 
-    if (sourcecode.extendedImage && Array.isArray(sourcecode.extendedImage)) {
-      sourcecode.extendedImage.forEach((image) => {
-        this.deleteFile(`/${image}`);
-      });
-    }
+    // if (sourcecode.extendedImage && Array.isArray(sourcecode.extendedImage)) {
+    //   sourcecode.extendedImage.forEach((image) => {
+    //     this.deleteFile(`/${image}`);
+    //   });
+    // }
 
     return this.sourcecodeModel.deleteOne({ _id });
   }

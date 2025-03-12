@@ -15,6 +15,9 @@ export class Blogs {
   image: string;
 
   @Prop()
+  shortDescription: string;
+
+  @Prop()
   content: string;
 
   @Prop()

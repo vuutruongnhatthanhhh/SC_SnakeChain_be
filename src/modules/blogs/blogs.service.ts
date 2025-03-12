@@ -37,7 +37,8 @@ export class BlogsService {
   }
 
   async create(createBlogDto: CreateBlogDto) {
-    const { title, url, image, content, author, isHide } = createBlogDto;
+    const { title, url, image, shortDescription, content, author, isHide } =
+      createBlogDto;
 
     const uniqueUrl = await this.generateUniqueUrl(url);
 
@@ -45,6 +46,7 @@ export class BlogsService {
       title,
       url: uniqueUrl,
       image,
+      shortDescription,
       content,
       author,
       isHide,
@@ -109,7 +111,7 @@ export class BlogsService {
       const results = await this.blogsModel
         .find(filter)
         .sort({ createdAt: -1 })
-        .select('-updatedAt -createdAt ');
+        .select('-updatedAt');
 
       return {
         results,
@@ -146,12 +148,6 @@ export class BlogsService {
       updatedUrl = await this.generateUniqueUrl(updatedUrl);
     }
 
-    if (image !== blog.image) {
-      if (blog.image) {
-        this.deleteFile(`/${blog.image}`);
-      }
-    }
-
     return await this.blogsModel.updateOne(
       { _id },
       {
@@ -169,10 +165,6 @@ export class BlogsService {
     const blog = await this.blogsModel.findById(_id);
     if (!blog) {
       throw new BadRequestException('Blog không tồn tại');
-    }
-
-    if (blog.image) {
-      this.deleteFile(`/${blog.image}`);
     }
 
     return this.blogsModel.deleteOne({ _id });

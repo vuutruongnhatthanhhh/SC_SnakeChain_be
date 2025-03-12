@@ -15,6 +15,9 @@ export class UpdateBlogDto {
   image: string;
 
   @IsOptional()
+  shortDescription: string;
+
+  @IsOptional()
   content: string;
 
   @IsOptional()

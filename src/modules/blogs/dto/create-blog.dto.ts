@@ -9,6 +9,9 @@ export class CreateBlogDto {
   @IsNotEmpty({ message: 'Hình ảnh không được để trống' })
   image: string;
 
+  @IsNotEmpty({ message: 'Mô tả ngắn không được để trống' })
+  shortDescription: string;
+
   @IsNotEmpty({ message: 'Nội dung không được để trống' })
   content: string;
 

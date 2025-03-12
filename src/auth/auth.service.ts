@@ -43,7 +43,7 @@ export class AuthService {
       user: {
         email: user.email,
         // _id: user._id,
-        // name: user.name,
+        name: user.name,
       },
       access_token: accessToken,
       refresh_token: refreshToken,
