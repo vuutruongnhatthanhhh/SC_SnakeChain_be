@@ -15,6 +15,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { BlogsModule } from '@/modules/blogs/blogs.module';
 import * as path from 'path';
 import { ImagesModule } from '@/modules/images/images.module';
+import { CoursesModule } from './modules/courses/courses.module';
+import { LessonsModule } from './modules/lessons/lessons.module';
 
 @Module({
   imports: [
@@ -72,6 +74,8 @@ import { ImagesModule } from '@/modules/images/images.module';
     }),
     BlogsModule,
     ImagesModule,
+    CoursesModule,
+    LessonsModule,
   ],
   controllers: [AppController],
   // protect all routes with JwtAuthGuard

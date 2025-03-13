@@ -56,10 +56,13 @@ export class SourcecodeService {
       extendedImage,
       linkDoc,
       linkYoutube,
+      linkWebsite,
       isHide,
     } = createSourcecodeDto;
 
     const uniqueUrl = await this.generateUniqueUrl(url);
+
+    console.log('link website', linkWebsite);
 
     const sourcecode = await this.sourcecodeModel.create({
       code,
@@ -75,6 +78,7 @@ export class SourcecodeService {
       extendedImage,
       linkDoc,
       linkYoutube,
+      linkWebsite,
       isHide,
     });
     return {
@@ -101,7 +105,6 @@ export class SourcecodeService {
     if (isHide !== undefined) {
       filter.isHide = isHide === 'true';
     }
-    console.log('field', field);
 
     if (field) {
       filter.field = field;
@@ -192,7 +195,7 @@ export class SourcecodeService {
   }
 
   async update(updateSourcecodeDto: UpdateSourcecodeDto) {
-    const { _id, url, image, extendedImage } = updateSourcecodeDto;
+    const { _id, url } = updateSourcecodeDto;
 
     const sourcecode = await this.sourcecodeModel.findById(_id);
     if (!sourcecode) {

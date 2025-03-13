@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SourcecodeService } from './sourcecode.service';
-import {
-  SourcecodeController,
-  UploadController,
-} from './sourcecode.controller';
+import { SourcecodeController } from './sourcecode.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SourceCode, SourceCodeSchema } from './schemas/sourcecode.schema';
 
@@ -13,7 +10,7 @@ import { SourceCode, SourceCodeSchema } from './schemas/sourcecode.schema';
       { name: SourceCode.name, schema: SourceCodeSchema },
     ]),
   ],
-  controllers: [SourcecodeController, UploadController],
+  controllers: [SourcecodeController],
   providers: [SourcecodeService],
   exports: [SourcecodeService],
 })

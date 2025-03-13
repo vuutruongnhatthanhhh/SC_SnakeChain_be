@@ -41,5 +41,8 @@ export class CreateSourcecodeDto {
   linkYoutube: string;
 
   @IsOptional()
+  linkWebsite: string;
+
+  @IsOptional()
   isHide: boolean;
 }

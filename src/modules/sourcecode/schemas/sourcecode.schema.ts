@@ -44,6 +44,9 @@ export class SourceCode {
   @Prop()
   linkYoutube: string;
 
+  @Prop()
+  linkWebsite: string;
+
   @Prop({ default: false })
   isHide: boolean;
 }
