@@ -15,8 +15,4 @@ export class CreateLessonDto {
 
   @IsOptional()
   isHide: boolean;
-
-  //   @IsArray()
-  @IsOptional()
-  course?: Types.ObjectId;
 }

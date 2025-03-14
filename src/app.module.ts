@@ -70,6 +70,10 @@ import { LessonsModule } from './modules/lessons/lessons.module';
           rootPath: path.join(__dirname, '..', 'uploadBlog'),
           serveRoot: '/uploadBlog',
         },
+        {
+          rootPath: path.join(__dirname, '..', 'uploadCourse'),
+          serveRoot: '/uploadCourse',
+        },
       ],
     }),
     BlogsModule,

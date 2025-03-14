@@ -20,8 +20,4 @@ export class UpdateLessonDto {
 
   @IsOptional()
   isHide: boolean;
-
-  //   @IsArray()
-  @IsOptional()
-  course?: Types.ObjectId;
 }

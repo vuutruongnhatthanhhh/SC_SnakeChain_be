@@ -59,10 +59,11 @@ export class LessonsController {
     return { totalLessons };
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.lessonsService.findOne(+id);
-  // }
+  @Get(':id')
+  @Public()
+  findOne(@Param('id') id: string) {
+    return this.lessonsService.findOne(id);
+  }
 
   @Patch()
   @Roles('SNAKE')

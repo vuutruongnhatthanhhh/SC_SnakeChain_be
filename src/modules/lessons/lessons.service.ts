@@ -14,7 +14,7 @@ export class LessonsService {
   ) {}
 
   async create(createLessonDto: CreateLessonDto) {
-    const { title, content, videoUrl, price, isHide, course } = createLessonDto;
+    const { title, content, videoUrl, price, isHide } = createLessonDto;
 
     const lessons = await this.lessonsModel.create({
       title,
@@ -22,7 +22,6 @@ export class LessonsService {
       videoUrl,
       price,
       isHide,
-      course,
     });
     return {
       _id: lessons._id,
@@ -103,10 +102,18 @@ export class LessonsService {
     return this.lessonsModel.countDocuments();
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} lesson`;
-  // }
+  async findOne(id: string) {
+    if (!mongoose.isValidObjectId(id)) {
+      throw new BadRequestException('Id không đúng định dạng MongoDB');
+    }
 
+    const lesson = await this.lessonsModel.findById(id);
+    if (!lesson) {
+      throw new BadRequestException('Lesson không tồn tại');
+    }
+
+    return lesson;
+  }
   async update(updateLessonDto: UpdateLessonDto) {
     const { _id } = updateLessonDto;
 

@@ -19,9 +19,6 @@ export class Lessons {
 
   @Prop({ default: false })
   isHide: boolean;
-
-  @Prop({ type: Types.ObjectId, ref: 'Courses' })
-  course: Types.ObjectId;
 }
 
 export const LessonsSchema = SchemaFactory.createForClass(Lessons);
