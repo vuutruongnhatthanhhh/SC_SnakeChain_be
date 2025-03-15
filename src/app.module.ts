@@ -17,6 +17,8 @@ import * as path from 'path';
 import { ImagesModule } from '@/modules/images/images.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
+import { MailModule } from './modules/mail/mail.module';
+import { VideoModule } from './modules/video/video.module';
 
 @Module({
   imports: [
@@ -80,6 +82,8 @@ import { LessonsModule } from './modules/lessons/lessons.module';
     ImagesModule,
     CoursesModule,
     LessonsModule,
+    MailModule,
+    VideoModule,
   ],
   controllers: [AppController],
   // protect all routes with JwtAuthGuard
