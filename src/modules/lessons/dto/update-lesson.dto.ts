@@ -10,6 +10,9 @@ export class UpdateLessonDto {
   title: string;
 
   @IsOptional()
+  code: string;
+
+  @IsOptional()
   content: string;
 
   @IsOptional()

@@ -9,6 +9,9 @@ export class Lessons {
   title: string;
 
   @Prop()
+  code: string;
+
+  @Prop()
   content: string;
 
   @Prop()

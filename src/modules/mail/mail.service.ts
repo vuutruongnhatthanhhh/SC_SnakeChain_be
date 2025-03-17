@@ -3,16 +3,21 @@ import { CreateMailDto } from './dto/create-mail.dto';
 import { UpdateMailDto } from './dto/update-mail.dto';
 import * as nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailService {
-  private transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'nhatthanh28012002@gmail.com', // Thay bằng email của bạn
-      pass: 'strmpymhgrjismwn', // Dùng App Password nếu dùng Gmail
-    },
-  });
+  private transporter: nodemailer.Transporter;
+
+  constructor(private readonly configService: ConfigService) {
+    this.transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: this.configService.get<string>('MAIL_USER'),
+        pass: this.configService.get<string>('MAIL_PASSWORD'),
+      },
+    });
+  }
 
   create(createMailDto: CreateMailDto) {
     return 'This action adds a new mail';

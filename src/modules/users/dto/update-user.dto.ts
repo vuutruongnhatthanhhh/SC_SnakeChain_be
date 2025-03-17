@@ -1,4 +1,5 @@
 import { IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class UpdateUserDto {
   @IsMongoId({ message: '_id không hợp lệ' })
@@ -19,4 +20,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   role: string;
+
+  @IsOptional()
+  lessons?: Types.ObjectId[];
 }

@@ -329,4 +329,14 @@ export class UsersService {
   async countUsers(): Promise<number> {
     return this.userModel.countDocuments();
   }
+
+  async hasLesson(userId: string, lessonId: string): Promise<boolean> {
+    const user = await this.userModel.findById(userId).select('lessons');
+
+    if (!user) {
+      throw new BadRequestException('Người dùng không tồn tại');
+    }
+
+    return user.lessons.some((lesson) => lesson.toString() === lessonId);
+  }
 }

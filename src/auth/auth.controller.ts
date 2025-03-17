@@ -29,22 +29,6 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  // @Get('mail')
-  // @Public()
-  // testMail() {
-  //   this.mailerService.sendMail({
-  //     to: 'itnap@ngananhphat.com',
-  //     subject: 'NAP',
-  //     text: 'Chào mừng đến với NAP',
-  //     template: 'nap',
-  //     context: {
-  //       name: 'Nhật Thanh',
-  //       activationCode: 123456789,
-  //     },
-  //   });
-  //   return 'ok';
-  // }
-
   @Post('send-email')
   @Public()
   async sendEmail(@Body() data: { email: string }) {
@@ -52,10 +36,10 @@ export class AuthController {
 
     try {
       await this.mailerService.sendMail({
-        to: email, // Email người nhận
-        subject: 'NAP', // Tiêu đề email
+        to: email,
+        subject: 'NAP',
 
-        template: 'nap', // Bạn có thể sử dụng template trong thư mục views nếu cần
+        template: 'nap', // use template .hbs
       });
 
       return { message: 'Email đã được gửi thành công!' };

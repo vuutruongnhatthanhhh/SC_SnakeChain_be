@@ -5,19 +5,23 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Lessons } from './schemas/lessons.schema';
 import { Model } from 'mongoose';
 import mongoose from 'mongoose';
+import { Courses } from '../courses/schemas/courses.schema';
 
 @Injectable()
 export class LessonsService {
   constructor(
     @InjectModel(Lessons.name)
     private lessonsModel: Model<Lessons>,
+    @InjectModel(Courses.name)
+    private coursesModel: Model<Courses>,
   ) {}
 
   async create(createLessonDto: CreateLessonDto) {
-    const { title, content, videoUrl, price, isHide } = createLessonDto;
+    const { title, code, content, videoUrl, price, isHide } = createLessonDto;
 
     const lessons = await this.lessonsModel.create({
       title,
+      code,
       content,
       videoUrl,
       price,
@@ -38,7 +42,10 @@ export class LessonsService {
     let filter: Record<string, any> = {};
 
     if (query && query.trim() !== '') {
-      filter.$or = [{ title: { $regex: query, $options: 'i' } }];
+      filter.$or = [
+        { title: { $regex: query, $options: 'i' } },
+        { code: { $regex: query, $options: 'i' } },
+      ];
     }
 
     if (isHide !== undefined) {
@@ -139,6 +146,12 @@ export class LessonsService {
     if (!lesson) {
       throw new BadRequestException('Lesson không tồn tại');
     }
+
+    // remove this lesson from course
+    await this.coursesModel.updateMany(
+      { lessons: _id },
+      { $pull: { lessons: _id } },
+    );
 
     return this.lessonsModel.deleteOne({ _id });
   }

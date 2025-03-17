@@ -8,11 +8,12 @@ import {
   Delete,
   Query,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Roles } from '@/decorator/customize';
+import { Public, Roles } from '@/decorator/customize';
 import { RolesGuard } from '@/auth/passport/roles.guard';
 
 @Controller('users')
@@ -72,5 +73,19 @@ export class UsersController {
   @UseGuards(RolesGuard)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Public()
+  @Get(':userId/has-lesson/:lessonId')
+  async checkUserHasLesson(
+    @Param('userId') userId: string,
+    @Param('lessonId') lessonId: string,
+  ) {
+    if (!userId || !lessonId) {
+      throw new BadRequestException('Thiếu userId hoặc lessonId');
+    }
+
+    const hasLesson = await this.usersService.hasLesson(userId, lessonId);
+    return { userId, lessonId, hasLesson };
   }
 }

@@ -27,7 +27,6 @@ export class CreateSourcecodeDto {
   @IsOptional()
   originalPrice: Number;
 
-  // @IsNotEmpty({ message: 'Hình đại diện không được để trống' })
   @IsOptional()
   image: string;
 

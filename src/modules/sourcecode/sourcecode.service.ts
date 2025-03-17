@@ -62,8 +62,6 @@ export class SourcecodeService {
 
     const uniqueUrl = await this.generateUniqueUrl(url);
 
-    console.log('link website', linkWebsite);
-
     const sourcecode = await this.sourcecodeModel.create({
       code,
       title,

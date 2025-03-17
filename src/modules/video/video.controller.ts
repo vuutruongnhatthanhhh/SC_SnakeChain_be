@@ -24,12 +24,15 @@ import { Public } from '@/decorator/customize';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { UsersService } from '../users/users.service';
 
-@Public()
 @Controller('video')
 export class VideoController {
   private videoDir = path.join(process.cwd(), 'uploadVideo');
-  constructor(private readonly videoService: VideoService) {}
+  constructor(
+    private readonly videoService: VideoService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Post('upload')
   @UseInterceptors(
@@ -72,14 +75,19 @@ export class VideoController {
     };
   }
 
-  @Get(':filename')
+  @Public()
+  @Get(':filename/:lessonId/:userId')
   async streamVideo(
     @Param('filename') filename: string,
+    @Param('lessonId') lessonId: string,
+    @Param('userId') userId: string,
     @Res() res: Response,
     @Req() req: Request,
   ) {
     //  check user has access to video
-    const userHasAccess = false;
+    // const userHasAccess = true;
+    const userHasAccess = await this.userService.hasLesson(userId, lessonId);
+
     if (!userHasAccess) {
       throw new HttpException(
         'Bạn phải trả phí để xem video này',

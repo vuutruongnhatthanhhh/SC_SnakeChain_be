@@ -4,6 +4,9 @@ export class CreateLessonDto {
   @IsNotEmpty({ message: 'Tiêu đề không được để trống' })
   title: string;
 
+  @IsOptional()
+  code: string;
+
   @IsNotEmpty({ message: 'Nội dung không được để trống' })
   content: string;
 
