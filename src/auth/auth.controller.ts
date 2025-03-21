@@ -48,10 +48,10 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Post('login')
   // not protect this route (use public)
   // don't need to check token
-  @Public()
   @UseGuards(LocalAuthGuard)
   @ResponseMessage('Fetch login')
   handleLogin(@Request() req) {

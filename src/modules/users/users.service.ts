@@ -317,7 +317,7 @@ export class UsersService {
       user.password,
     );
     if (!isMatch) {
-      throw new BadRequestException('Mật khẩu hiện tại không đúng.');
+      throw new BadRequestException('Mật khẩu cũ không đúng.');
     }
 
     const newPassword = await hashPasswordHelper(data.password);
